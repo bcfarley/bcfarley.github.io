@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+	<style>
+	body {
+		margin: 0;
+		overflow: hidden;
+	}
+
+	svg {
+		border: 0px;
+		margin: 0px;
+		padding: 0px;
+	}
+	</style>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+    <svg id="svg" style="stroke-width: 0px; background-color: #FFFFFF;"></div>
+    <script type="text/javascript">
+	(function() {
+
+	// Constants
+	var centreRadius;
+	var barWidth = 7;    
+	var labelSize = 10;
+	var legendSize = 12;
+	var transitionMS = 1000;
+
+	// Declare Variables
+	var svg = d3.select("svg"); 
+	var firstLoad = true;
+	var barAngle;
+	var transitionFactor;
+	var data;
+	var groupings;
+	var legendX;
+	var viewX; 
+	var viewY; 
+	var viewXOld = 0;
+	var viewYOld = 0;
+	var maxValue;
+
+	// Return the angle per bar in Degrees
+	function angleDegrees (i) {
+		return -(i * barAngle) - 90; }
+	
+	// Return the angle per bar in Radians
+	function angleRadians (i) {
+		return angleDegrees(i) * (Math.PI / 180); }
+		
+	// -----------------------------------------------------------------------------------
+	// Add width of text to array itself. Draw and remove text to measure width
+	function addTextWidth(textData, textProperty, textSize) {
+		var tmpText = svg.selectAll('.tmpText')
+			.data(textData).enter().append("text")
+			.attr("font-family", "Roboto,RobotoDraft,Helvetica,Arial,sans-serif")
+			.attr("font-size", function(d, i) { return textSize + "px"; } )
+			.text( function (d) { return d[textProperty]; })
+			.each( function(d, i) {
+				d.textWidth = this.getComputedTextLength();
+			});
+		tmpText.remove();
+	}
+
+	// -----------------------------------------------------------------------------------
+	// Redraw on window resize
+	function resize() {
+		viewX = $(window).width(); 
+		viewY = $(window).height();
+		// Only redraw when window size has changed 
+		if((viewXOld != viewX) || (viewYOld != viewY)) {
+			viewXOld = viewX;
+			viewYOld = viewY;
+    		resizeSVG();
+			drawChart();
+		}
+  	}
+
+	// -----------------------------------------------------------------------------------
+	// Request JSON data
+	d3.queue()
+  		.defer(d3.json, "CityData.json")
+  		.await(prepare);
+
+	// Receive JSON data and prepare data
+	function prepare(error, CityData) {
+  		if(error) { console.log(error); }
+
+		// Sort by value descending
+		CityData.sort(function(a, b) {
+			return a.population - b.population; });
+
+		// Angle between each bar
+		barAngle = 330 / (CityData.length - 1);
+
+		// Rename variable and properties to keep code below generic  
+		data = CityData.map( function(d, i) { 
+			var newItem = {};
+			newItem.name = d.name;
+			newItem.value = d.population;
+			newItem.group = d.continent;
+			newItem.colour = d.colour;
+			newItem.isRight = (i * barAngle) >= 180;
+			return newItem;
+		});  
+
+		// Max Value
+		maxValue = d3.max(data, function(d) { return d.value; } );
+
+		// Create summary by group
+		groupings = d3.nest()
+			.key ( function(d) { return d.group; } )
+			.sortKeys (d3.ascending)
+			.rollup ( function(leaves) {   
+				return {
+					colour: d3.max(leaves, function(d) { return d.colour }),
+					count: leaves.length
+				}; })
+			.entries(data);
+
+		resizeSVG();
+		// Calculate width of text
+		addTextWidth(data, 'name', labelSize);			
+		addTextWidth(groupings, 'key', legendSize);
+
+		legendX = d3.max(groupings, function(d) { 
+			return (d.textWidth + legendSize + 5); });
+		transitionFactor = transitionMS / d3.max(data, function(d) {
+			return (d.value); })
+		drawChart();
+	}
+
+	// -----------------------------------------------------------------------------------
+	// Resize SVG to fit the window
+	function resizeSVG() {
+		viewX = $(window).width(); 
+		viewY = $(window).height(); 		
+		svg
+			.attr("height", function(d, i) { return viewY; } )
+			.attr("width", function(d, i) { return viewX; } )
+	}
+
+	// -----------------------------------------------------------------------------------
+	function drawChart() {
+		// Resize centre
+		centreRadius = Math.min(150, viewX / 5, viewY / 5);
+		console.log(centreRadius);
+		// Calculate the Fixed size of the chart  
+		var boundaryXMaxFixed = d3.max(data, function(d, i) { 
+			return ((centreRadius + 5 + d.textWidth) * Math.cos(angleRadians(i))); });
+		var boundaryXMinFixed = d3.min(data, function(d, i) { 
+			return ((centreRadius + 5 + d.textWidth) * Math.cos(angleRadians(i))); });
+		var boundaryYMaxFixed = d3.max(data, function(d, i) { 
+			return ((centreRadius + 5 + d.textWidth) * Math.sin(angleRadians(i))); })
+		var boundaryYMinFixed = d3.min(data, function(d, i) { 
+			return ((centreRadius + 5 + d.textWidth) * Math.sin(angleRadians(i))); });
+		// Calculate the Variable size of the chart 
+		var boundaryXMaxVariable = d3.max(data, function(d, i) { 
+			return (d.value * Math.cos(angleRadians(i))); })
+		var boundaryXMinVariable = d3.min(data, function(d, i) { 
+			return (d.value * Math.cos(angleRadians(i))); });
+		var boundaryYMaxVariable = d3.max(data, function(d, i) { 
+			return (d.value * Math.sin(angleRadians(i))); })
+		var boundaryYMinVariable = d3.min(data, function(d, i) { 
+			return (d.value * Math.sin(angleRadians(i))); });
+		// Scaling factor based on calculated size
+		var barFactor = Math.min(
+			(viewX - (boundaryXMaxFixed - boundaryXMinFixed)) / 
+			(boundaryXMaxVariable - boundaryXMinVariable),
+			(viewY - (boundaryYMaxFixed - boundaryYMinFixed)) / 
+			(boundaryYMaxVariable - boundaryYMinVariable) );
+		// Centre based on calculated size
+		var centreX = -(boundaryXMinFixed + boundaryXMinVariable * barFactor) + 
+				(viewX - (boundaryXMaxFixed - boundaryXMinFixed) 
+				- ((boundaryXMaxVariable - boundaryXMinVariable) * barFactor)) / 2 + 5;
+		var centreY = -(boundaryYMinFixed + boundaryYMinVariable * barFactor);
+		
+		// -----------------------------------------------------------------------------------
+		// Draw bars horizontally and rotate into position
+		var bars = svg.selectAll(".bars")
+			.data(data);
+		bars.enter().append("rect")
+			.attr('class', 'bars')
+			.attr("fill",function(d) { return d.colour } )
+		bars.exit().remove();
+		bars		
+			.attr("x", function(d, i) { return centreX + centreRadius; } )
+			.attr("y", function(d, i) { return centreY - (barWidth / 2); } )
+			.attr("width", function(d, i) { return (firstLoad ? 0 : d.value * barFactor); } )
+			.attr("height", function(d, i) { return barWidth; } )
+			.attr("transform", function(d, i) { 
+				return "rotate(" + (-(i * barAngle) - 90) + ", " + centreX + ", " + centreY + ")"; } );
+		if(firstLoad) {
+			bars.transition()
+				.duration(function(d, i) { return transitionMS; } )
+				.attr("width", function(d, i) { return d.value * barFactor; } )
+		}
+
+		// -----------------------------------------------------------------------------------
+		// Calculate spacing for axis marks
+		var xScale = d3.scaleLinear()
+			.domain([0.01, maxValue])
+			.range([0, function(d, i) { return barFactor * maxValue; }]);
+		var ticks = xScale.ticks(5),
+			tickFormat = xScale.tickFormat(5, "1");
+		var axisMarkData = ticks.map(tickFormat); 
+		
+		// White circles to represent axis marks. Drawn after bars to overlap
+		var axisMarks = svg.selectAll(".axisMarks")
+			.data(axisMarkData);
+		axisMarks.enter().append("circle")
+			.attr('class', 'axisMarks')
+			.attr("stroke", "#FFFFFF")
+			.attr("fill", "none")
+			.attr("stroke-width", 2);
+		axisMarks.exit().remove();
+		axisMarks
+			.attr("cx", function(d, i) { return centreX; } )
+			.attr("cy", function(d, i) { return centreY; } )
+			.attr("r", function(d, i) { return d * barFactor + centreRadius; } );
+		
+		// Axis text labels
+		var axisText = svg.selectAll(".axisText")
+			.data(axisMarkData)
+		axisText.enter().append("text")
+			.attr('class', 'axisText')
+			.attr("text-anchor", "end")
+			.attr("alignment-baseline", "baseline")
+			.attr("font-family", "sans-serif")
+			.attr("font-size", function(d, i) { return labelSize + "px"; } )
+			.attr("fill", "#000000" );
+		axisText.exit().remove();
+		axisText
+			.text( function (d) { 
+				if (d > 1000000) { return (d / 1000000).toFixed(1) + 'M'; }
+				else if (d > 1000) { return (d / 1000).toFixed(1) + 'k'; }
+				else { return (d).toFixed(0); }} )
+			.attr("x", function(d, i) { return centreX -10 + Math.cos((-330-90) * (Math.PI / 180)) * (centreRadius + d * barFactor); } )
+			.attr("y", function(d, i) { return centreY +0 + Math.sin((-330-90) * (Math.PI / 180)) * (centreRadius + d * barFactor); } );
+
+		// -----------------------------------------------------------------------------------
+		// Draw text horizontally and rotate into position 
+		// Text on left vs right is rotated by 180 degrees
+		// Drawn after axis to overlap
+		var labels = svg.selectAll(".labels")
+			.data(data)
+		labels.enter().append("text")
+			.attr("font-family", "sans-serif")
+			.attr('class', 'labels')
+			.attr("font-size", function(d, i) { return labelSize + "px"; } )
+			.attr("fill", "#000000" );
+		labels.exit().remove();
+		labels	
+			.attr("x", function(d, i) {  
+				return centreX + (d.isRight ? 1 : -1) * (centreRadius + (firstLoad ? 0 : d.value * barFactor) + 5); } )
+			.attr("y", function(d, i) { return centreY + (labelSize / 2) - 2; } )
+			.attr("text-anchor", function(d, i) {  
+				return d.isRight ? "start" : "end"; } )
+			.text( function (d) { return d.name; })
+			.attr("transform", function(d, i) { 
+				return "rotate(" + (-(i * barAngle) - 90 - (d.isRight ? 0 : 180)) + ", " + centreX + ", " + centreY + ")"; } );
+		if(firstLoad) {
+			labels.transition()
+				.duration(function(d, i) { return transitionMS; } )
+				.attr("x", function(d, i) {  
+					return centreX + (d.isRight ? 1 : -1) * (centreRadius + (d.value * barFactor) + 5); })
+			}
+
+		// -----------------------------------------------------------------------------------
+		// Circles for the legend 
+		var legendDots = svg.selectAll(".legendDots")
+			.data(groupings)
+		legendDots.enter().append("circle")
+			.attr('class', 'legendDots')
+			.attr("fill",function(d) {
+				return d.value.colour } );
+		legendDots.exit().remove();
+		legendDots
+			.attr("cx", function(d, i) { return centreX - (legendX / 2) + (legendSize / 2); } )
+			.attr("cy", function(d, i) { return centreY + i * (legendSize + 8); } )
+			.attr("r", function(d, i) { return legendSize / 2; } );
+
+		// Legend text		
+		var legendText = svg.selectAll(".legendText")
+			.data(groupings)
+		legendText.enter().append("text")
+			.attr('class', 'legendText')
+			.attr("font-family", "Roboto,RobotoDraft,Helvetica,Arial,sans-serif")
+			.attr("font-size", function(d, i) { return legendSize + "px"; } )
+			.attr("fill", "#000000" )
+			.text( function (d) { return d.key; });
+		legendText.exit().remove();
+		legendText
+			.attr("x", function(d, i) { return centreX - (legendX / 2) + legendSize + 5; } )
+			.attr("y", function(d, i) { return centreY + i * (legendSize + 8) + (legendSize / 2) - 1; } );
+
+		// Title in circle
+		svg.select(".chartInnerTitle").remove();
+		svg.append("text")
+			.attr("class", "chartInnerTitle")
+			.attr("font-family", "Roboto,RobotoDraft,Helvetica,Arial,sans-serif")
+			.attr("font-size", function(d, i) { return "25px"; } )	
+			.text(function(d, i) { return data.length + ' Cities'; })
+			.attr("fill", "#333333" )
+			.attr("text-anchor", "middle")
+			.attr("x", function(d, i) { return centreX; } )
+			.attr("y", function(d, i) { return centreY - 55; } );
+
+		// Sub title in circle
+		svg.select(".chartInnerSubTitle").remove();
+		svg.append("text")
+			.attr("class", "chartInnerSubTitle")
+			.attr("font-family", "Roboto,RobotoDraft,Helvetica,Arial,sans-serif")
+			.attr("font-size", function(d, i) { return "12px"; } )	
+			.text("Populations > 3 million")
+			.attr("fill", "#888888" )
+			.attr("text-anchor", "middle")
+			.attr("x", function(d, i) { return centreX; } )
+			.attr("y", function(d, i) { return centreY - 32; } );		
+
+		// Outer title
+		svg.select(".chartOuterTitle").remove();
+		svg.append("text")
+			.attr("class", "chartOuterTitle")
+			.attr("font-family", "Roboto,RobotoDraft,Helvetica,Arial,sans-serif")
+			.attr("font-size", function(d, i) { return "25px"; } )	
+			.text("City Population by Continent")
+			.attr("fill", "#333333" )
+			.attr("text-anchor", "start")
+			.attr("x", function(d, i) { return 50; } )
+			.attr("y", function(d, i) { return 65; } );
+
+		// Outer sub title
+		svg.select(".chartOuterSubTitle").remove();
+		svg.append("text")
+			.attr("class", "chartOuterSubTitle")
+			.attr("font-family", "Roboto,RobotoDraft,Helvetica,Arial,sans-serif")
+			.attr("font-size", function(d, i) { return "10px"; } )	
+			.text("Data Source: https://en.wikipedia.org/wiki/List_of_cities_proper_by_population")
+			.attr("fill", "#888888" )
+			.attr("text-anchor", "start")
+			.attr("x", function(d, i) { return 50; } )
+			.attr("y", function(d, i) { return 88; } );	
+
+		// Resize on window resize
+		resize();
+  		d3.select(window).on("resize", resize);
+
+		// Turn off animation
+		setTimeout(function() { firstLoad = false; }, 1000);
+	}		
+	})();
+	</script>
+
+</body>
+</html>
