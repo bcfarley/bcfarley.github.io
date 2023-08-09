@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>bcfarley list</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <style>
+            @media (min-width: 600px) {
+                .block { 
+                    width: 90%;
+                    max-width: 1200px;  
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
+                }
+            }
+            @media only screen and (max-width: 600px) {
+                .block { 
+                    width: 90%; 
+                    grid-template-columns: repeat(minmax(300px, 1fr))
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root"></div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="list.js"></script>
+</html>

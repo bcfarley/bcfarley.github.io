@@ -1,0 +1,8 @@
+Title,Details,Image,Link
+Patents Granted Parallel Coordinates,"Parallel Coordinates chart showing the number of patents granted per year, ranked by country between 2000 and 2023.",parallel.png,https://observablehq.com/@bcfarley/patents-parallel-coordinates
+Time Zone Reference,"Quiclky show the current times in 8 cities plus your local timezone to help coordinate global meetings or family catchups.",timezones.png,https://observablehq.com/@bcfarley/time-zones
+Time Zone Data Preparation,"I used JavaScript to prepare the data required for the Time Zone Reference app.",timezoneprep.png,https://observablehq.com/@bcfarley/time-zone-data-prep
+Patents Granted Transitions,"An experiment to test transitions between polygons on a heatmap, circles on a bubble map and rectangles on a bar chart.",transitions.png,https://observablehq.com/@bcfarley/patents-granted
+City Population by Continent,"Radial Bar Chart showing cities with a population of 3 million of more. This is an old example from 20. This was my first quick d3js example in 2017.",radial.png,https://bcfarley.github.io/RadialBars/Radial.html
+Button Module for ObservableHQ,"Starting point of a toolkit to be used by other notebooks. This will be extended to add search, dropdown, hierarchy, multiple select and a value spark bar.",buttons.png,https://observablehq.com/@bcfarley/buttonsbcf
+Google Patents Public Data,"Simple Python Jupyter Notebook on Colab for fetching patent data from Google Patents Public Data using BigQuery.",patentpython.png,https://colab.research.google.com/drive/11Ye-q2Mg1lWuGdonVQ6yG6no_R2HtcQR
