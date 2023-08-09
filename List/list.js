@@ -13,7 +13,7 @@ async function start() {
 
     var headingContainer1 = body.append("div")
         .attr("id", "headingContainer1")
-        .style("height", "200px")
+        .style("height", "350px")
         .style("width", "100%")
         .style("background", "#7db4db")
         .style("position", "relative")
@@ -30,6 +30,8 @@ async function start() {
         .style("font-size", "60px")
         .style("font-weight", "bold")
         .style("color", "#fff")
+        .style("padding-top", "30px")
+        .style("padding-bottom", "20px")
     var heading2 = headingContainer2.append("a")
         .attr("id", "heading2")
         .text("linkedin.com/in/brettcfarley")
@@ -40,19 +42,27 @@ async function start() {
         .style("width", "100%")
         .style("text-align", "center")
         .style("margin", "0")
-        .style("color", "#F0F0F0")
+        .style("color", "#F6F6F6")
+        .style("padding-top", "50px")
+        .style("padding-bottom", "20px")
 
     var intro1 = body.append("div")
         .attr("id", "intro1")
-        .classed("intro", true)
+        // .classed("intro", true)
+        .style("max-width", "750px")
+        .style("color", "#777")
+        .style("font-size", "16px")
+        .style("font-weight", "normal")
         .style("text-align", "left")
         .style("margin", "auto")
-        .style("padding-top", '30px')
+        .style("padding-top", '40px')
+        .style("padding-bottom", '20px')
         .style("line-height", 1.5)
         .text("I have included some personal data, analysis and visualization examples below to use as demos. "
             + "I have created this because most of my work is behind paywalls or is internal to companies. "
             + "I will keep adding to this list. ")
-        
+    
+
     var blockContainer = body.append("div")
         .classed("blockContainer", true)
         .attr("id", "blockContainer")
