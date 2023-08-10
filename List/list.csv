@@ -2,8 +2,9 @@ Title,Details,Image,Link
 Patents Granted by Country,"Parallel Coordinates chart showing the number of patents granted per year, ranked by country between 2005 and 2023. Data is from Google Public Patent Data.",parallel.png,https://observablehq.com/@bcfarley/patents-parallel-coordinates
 Time Zone Reference,"Quiclky view the current times in 8 cities plus your local timezone to help coordinate global meetings or family catchups.",timezones.png,https://observablehq.com/@bcfarley/time-zones
 Transition Experiment,"Experimenting with transitions between polygons on a heatmap, circles on a bubble map and rectangles on a bar chart to maintain context while switching chart.",transitions.png,https://observablehq.com/@bcfarley/patents-granted
+London TFL Cycle Hire Density,"Density map of cycle hire locations in London using Observable Plot. Data from TFL. ",tflcycle.png,https://observablehq.com/@bcfarley/london-tfl-cycle-hire-density
 Radial Bar Chart,"Cities with a population of 3+ million. My first quick d3js example in 2017.",radial.png,https://bcfarley.github.io/RadialBars/Radial.html
-Time Zone Data Prep,"Prepareing the data for the Time Zone Reference app using JavaScript.",timezoneprep.png,https://observablehq.com/@bcfarley/time-zone-data-prep
+Time Zone Data Prep,"Preparing the data for the Time Zone Reference app using JavaScript.",timezoneprep.png,https://observablehq.com/@bcfarley/time-zone-data-prep
 Button Module for ObservableHQ,"Start of a toolkit to be used by other notebooks. Future enhancements will include search, dropdown, hierarchy, multiple select and a value spark bar.",buttons.png,https://observablehq.com/@bcfarley/buttonsbcf
 Google Patents Public Data,"Simple Python script for fetching data from Google Patents Public Data using BigQuery.",patentpython.png,https://colab.research.google.com/drive/11Ye-q2Mg1lWuGdonVQ6yG6no_R2HtcQR
 Qlik Sense Tab Navigation Extension,"Extension for an early Qlik Sense releases.",qstab.png,https://github.com/bcfarley/Qlik-Sense-Tab-Buttons
