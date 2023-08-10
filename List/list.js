@@ -109,7 +109,7 @@ async function start() {
         .style("grid-row-gap", "20px")
         // .style("grid-template-columns", "repeat(auto-fit, minmax(300px, 1fr))")
 
-    var list = await d3.csv("list.csv")
+    var list = await d3.csv("list.csv?rnd=" + Math.round(Math.random() * 1000000))
     var blocks = block.selectAll("a")
         .attr("id", "blocks")
         .data(list).join("a")
