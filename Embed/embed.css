@@ -1,0 +1,119 @@
+body {
+    /* background: #F6F6F6; */
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    margin: 0;
+    padding: 0
+}
+
+.headingContainer1 {
+    height: 350px; 
+    width: 100%; 
+    background: radial-gradient(circle, rgb(146, 183, 209) 0%, rgb(85, 158, 209) 100%); 
+    position: relative;
+}
+
+.headingContainer2 {
+    position: absolute; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    width: 100%; 
+    margin: 0px; 
+    text-align: center;
+}
+
+.heading1 {
+    font-weight: normal; 
+    color: rgb(255, 255, 255); 
+    padding-bottom: 0px;
+}
+
+.heading2 {
+    font-family: 'Architects Daughter', sans-serif; 
+    font-weight: normal; 
+    width: 100%; 
+    text-align: center; 
+    margin: 0px; 
+    color: rgb(255, 255, 255); 
+    padding-top: 0px; 
+    padding-bottom: 10px;
+}
+
+.heading3 {
+    font-weight: normal; 
+    width: 100%; 
+    text-align: center; 
+    margin: 0px; 
+    color: rgb(224, 224, 224);
+}
+
+.intro1 {
+    color: rgb(119, 119, 119); 
+    font-weight: normal; 
+    text-align: left; 
+    margin: auto; 
+    padding-top: 40px; 
+    padding-bottom: 20px; 
+    line-height: 1.5;
+}
+
+.blockContainer {
+    background: white;
+    width: 100%;
+    /* padding: 30px; */
+    /* display: grid; */
+    /* grid-column-gap", "20px") */
+        /* .style("grid-row-gap", "20px") */
+}
+
+.block {
+    /* background: orange */
+    margin: auto;
+    /* padding: 30px; */
+    /* display: grid; */
+    /* grid-column-gap", "20px") */
+        /* .style("grid-row-gap", "20px") */
+}
+
+#observablehq-chart-d88454f2 {
+    padding-top: 30px;
+}
+
+@media (min-width: 600px) {
+    .heading1 {
+        font-size: 100px;
+    }
+    .heading2 {
+        font-size: 45px;
+    }
+    .intro1 { 
+        width: 70%;
+        max-width: 900px;  
+    }
+    .block { 
+        position: relative;
+        top: 30px;
+        width: 90%;
+        /* max-width: 1200px;   */
+        /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) */
+    }    
+}
+
+@media only screen and (max-width: 600px) {
+    .heading1 {
+        font-size: 60px;
+    }
+    .heading2 {
+        font-size: 35px;
+    }
+    .intro1 { 
+        width: 70%; 
+        max-width: 100%;
+    }
+    .block { 
+        width: 90%; 
+        /* grid-template-columns: repeat(minmax(300px, 1fr)) */
+    }
+}
+
+

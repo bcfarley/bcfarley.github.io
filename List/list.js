@@ -151,12 +151,12 @@ async function start() {
 
     var details = blocks.append("div")
         .attr("id", "details")
-        .text(d => d.Details)
+        .html(d => d.Details)
         .style("max-width", "100%")
         .style("margin", "auto")
-        .style("font-size", "14px")
+        .style("font-size", "16px") // "14px")
         .style("text-align", "left")
-        .style("padding", "10px")
+        .style("padding", "20px") // "10px")
         .style("color", "#777")
         .style("line-height", 1.5)
             // Title,Details,Image,Link

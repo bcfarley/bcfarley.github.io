@@ -1,5 +1,6 @@
 Title,Details,Image,Link
-Patents Granted by Country,"Parallel Coordinates chart showing the number of patents granted per year, ranked by country between 2005 and 2023. Data is from Google Public Patent Data.",parallel.png,https://observablehq.com/@bcfarley/patents-parallel-coordinates
+Embedded Example,"Patents Granted by Country embedded in a website.",embedded.png,https://bcfarley.github.io/Embed/
+Patents Granted by Country,"Parallel Coordinates chart showing the number of patents granted per year, ranked by country between 2005 and 2023. Data is from Google Public Patent Data. <p><a href='https://bcfarley.github.io/Embed/'>Embedded Example<a><p>",parallel.png,https://observablehq.com/@bcfarley/patents-parallel-coordinates
 Time Zone Reference,"Quiclky view the current times in 8 cities plus your local timezone to help coordinate global meetings or family catchups.",timezones.png,https://observablehq.com/@bcfarley/time-zones
 Transition Experiment,"Experimenting with transitions between polygons on a heatmap, circles on a bubble map and rectangles on a bar chart to maintain context while switching chart.",transitions.png,https://observablehq.com/@bcfarley/patents-granted
 London TFL Cycle Hire Density,"Density map of cycle hire locations in London using Observable Plot. Data from TFL. ",tflcycle.png,https://observablehq.com/@bcfarley/london-tfl-cycle-hire-density
