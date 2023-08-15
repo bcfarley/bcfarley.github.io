@@ -127,7 +127,7 @@ async function start() {
 
     var titles = blocks.append("div")
         .attr("id", "titles")
-        .text(d => d.Title)
+        .html(d => d.Title)
         .style("max-width", "100%")
         .style("margin", "auto")
         // .style("font-size", "16px")
